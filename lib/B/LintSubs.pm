@@ -3,7 +3,7 @@ package B::LintSubs;
 use strict;
 use B qw(walkoptree_slow main_root main_cv walksymtable);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $file = "unknown";		# shadows current filename
 my $line = 0;			# shadows current line number
@@ -13,6 +13,48 @@ my $curcv;			# shadows current CV for current stash
 my %done_cv;		# used to mark which subs have already been linted
 
 my $exitcode = 0;
+
+=head1 NAME
+
+B::LintSubs - Perl compiler backend to check sub linkage
+
+=head1 SYNOPSIS
+
+B<perl> B<-MO=LintSubs> [I<FILE>] [B<-e PROGRAM>]
+
+=head1 DESCRIPTION
+
+When using C<use strict>, subroutine names are not checked at the callsite;
+this makes the following a perfectly valid program at compiletime, that only
+blows up at runtime
+
+ use strict;
+ foobar();
+
+When using the C<B::LintSubs> checker instead, this is detected:
+
+ $ perl -MO=LintSubs -e 'use strict;
+                         foobar();'
+ Undefined subroutine foobar called at -e line 2
+
+Imported functions from other modules are of course detected:
+
+ $ perl -MO=LintSubs -e 'use strict; 
+                         use List::Util qw( max );
+			 $_ = max( 1, 2, 3 )'
+ -e syntax OK
+
+In order to handle situations where external code is conditionally referenced
+at runtime, any fully-qualified references to other functions are printed with
+a warning, but not considered fatal. The programmer is assumed to Know What He
+Is Doing in this case:
+
+ $ perl -MO=LintSubs -e 'if( 1 ) { require Data::Dumper; 
+                                   Data::Dumper::Dump( "Hello" ) }'
+ Unable to check call to Data::Dumper::Dump in foreign package at -e line 1
+ -e syntax OK
+
+=cut
 
 sub warning {
     my $format = (@_ < 2) ? "%s" : shift;
@@ -108,5 +150,14 @@ sub compile {
 
     return \&do_lint;
 }
+
+=head1 AUTHOR
+
+Paul Evans E<lt>leonerd@leonerd.org.ukE<gt>
+
+Based on the C<B::Lint> module by Malcolm Beattie,
+E<lt>mbeattie@sable.ox.ac.ukE<gt>.
+
+=cut
 
 1;
