@@ -1,9 +1,14 @@
+#  You may distribute under the terms of either the GNU General Public License
+#  or the Artistic License (the same terms as Perl itself)
+#
+#  (C) Paul Evans, 2006,2007 -- leonerd@leonerd.org.uk
+
 package B::LintSubs;
 
 use strict;
 use B qw(walkoptree_slow main_root main_cv walksymtable);
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 my $file = "unknown";		# shadows current filename
 my $line = 0;			# shadows current line number
@@ -151,6 +156,11 @@ sub compile {
     return \&do_lint;
 }
 
+# Keep perl happy; keep Britain tidy
+1;
+
+__END__
+
 =head1 AUTHOR
 
 Paul Evans E<lt>leonerd@leonerd.org.ukE<gt>
@@ -159,5 +169,3 @@ Based on the C<B::Lint> module by Malcolm Beattie,
 E<lt>mbeattie@sable.ox.ac.ukE<gt>.
 
 =cut
-
-1;
