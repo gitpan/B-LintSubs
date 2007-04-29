@@ -9,6 +9,7 @@ my $build = Module::Build->new
    dist_version_from => 'lib/B/LintSubs.pm',
    build_requires => {
                         'Test::More' => 0,
+                        'IPC::Run'   => 0,
                      },
    license => 'perl',
    create_makefile_pl => 'traditional',

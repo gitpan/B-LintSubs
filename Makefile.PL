@@ -5,6 +5,7 @@ WriteMakefile
           'NAME' => 'B::LintSubs',
           'VERSION_FROM' => 'lib/B/LintSubs.pm',
           'PREREQ_PM' => {
+                           'IPC::Run' => '0',
                            'Test::More' => '0'
                          },
           'INSTALLDIRS' => 'site',

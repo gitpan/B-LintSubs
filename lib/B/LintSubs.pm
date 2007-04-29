@@ -8,7 +8,7 @@ package B::LintSubs;
 use strict;
 use B qw(walkoptree_slow main_root main_cv walksymtable);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 my $file = "unknown";		# shadows current filename
 my $line = 0;			# shadows current line number

@@ -1,6 +1,6 @@
 ---
 name: B-LintSubs
-version: 0.03
+version: 0.04
 author:
   - 'Paul Evans E<lt>leonerd@leonerd.org.ukE<gt>'
   - |-
@@ -9,9 +9,10 @@ author:
 abstract: Perl compiler backend to check sub linkage
 license: perl
 build_requires:
+  IPC::Run: 0
   Test::More: 0
 provides:
   B::LintSubs:
     file: lib/B/LintSubs.pm
-    version: 0.03
+    version: 0.04
 generated_by: Module::Build version 0.26
