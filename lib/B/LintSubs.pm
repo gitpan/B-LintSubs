@@ -8,7 +8,7 @@ package B::LintSubs;
 use strict;
 use B qw(walkoptree_slow main_root main_cv walksymtable);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 my $file = "unknown";		# shadows current filename
 my $line = 0;			# shadows current line number
@@ -155,6 +155,16 @@ sub compile {
 
     return \&do_lint;
 }
+
+# B.pm has a bug, in walkoptree_slow() tries to recurse into things that
+# aren't actually B::OP trees. We'll have to work around it
+my $walkoptree_old = \&B::walkoptree_slow;
+
+*B::walkoptree_slow = sub {
+   my ( $op, $method, $level ) = @_;
+   return unless $op->isa( "B::OP" );
+   return $walkoptree_old->( $op, $method, $level );
+};
 
 # Keep perl happy; keep Britain tidy
 1;

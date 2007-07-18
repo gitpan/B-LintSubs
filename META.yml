@@ -1,6 +1,6 @@
 ---
 name: B-LintSubs
-version: 0.04
+version: 0.05
 author:
   - 'Paul Evans E<lt>leonerd@leonerd.org.ukE<gt>'
   - |-
@@ -14,5 +14,5 @@ build_requires:
 provides:
   B::LintSubs:
     file: lib/B/LintSubs.pm
-    version: 0.04
+    version: 0.05
 generated_by: Module::Build version 0.26
