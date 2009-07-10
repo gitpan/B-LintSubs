@@ -1,14 +1,15 @@
 #  You may distribute under the terms of either the GNU General Public License
 #  or the Artistic License (the same terms as Perl itself)
 #
-#  (C) Paul Evans, 2006,2007 -- leonerd@leonerd.org.uk
+#  (C) Paul Evans, 2006,2007,2009 -- leonerd@leonerd.org.uk
 
 package B::LintSubs;
 
 use strict;
+use warnings;
 use B qw(walkoptree_slow main_root main_cv walksymtable);
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 my $file = "unknown";		# shadows current filename
 my $line = 0;			# shadows current line number
@@ -160,11 +161,14 @@ sub compile {
 # aren't actually B::OP trees. We'll have to work around it
 my $walkoptree_old = \&B::walkoptree_slow;
 
-*B::walkoptree_slow = sub {
-   my ( $op, $method, $level ) = @_;
-   return unless $op->isa( "B::OP" );
-   return $walkoptree_old->( $op, $method, $level );
-};
+{
+   no warnings 'redefine';
+   *B::walkoptree_slow = sub {
+      my ( $op, $method, $level ) = @_;
+      return unless $op->isa( "B::OP" );
+      return $walkoptree_old->( $op, $method, $level );
+   };
+}
 
 # Keep perl happy; keep Britain tidy
 1;
@@ -173,9 +177,8 @@ __END__
 
 =head1 AUTHOR
 
-Paul Evans E<lt>leonerd@leonerd.org.ukE<gt>
+Paul Evans <leonerd@leonerd.org.uk>
 
-Based on the C<B::Lint> module by Malcolm Beattie,
-E<lt>mbeattie@sable.ox.ac.ukE<gt>.
+Based on the C<B::Lint> module by Malcolm Beattie, <mbeattie@sable.ox.ac.uk>.
 
 =cut
